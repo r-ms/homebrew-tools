@@ -5,14 +5,15 @@ class VfTranscribe < Formula
 
   if Hardware::CPU.arm?
     url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-arm64.tar.gz"
-    sha256 "df2af80072139691471989fbc6513933cb5c85ab70117c663084703635771f1d"
+    sha256 "668db2b97d4197350c196b91724f232b70c456db7f39db31b8df93352298920a"
   else
     url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-x86_64.tar.gz"
     sha256 "PLACEHOLDER_X86_64_SHA256"
   end
 
   def install
-    bin.install "vf-transcribe"
+    libexec.install Dir["*"]
+    bin.install_symlink libexec/"vf-transcribe"
   end
 
   test do
