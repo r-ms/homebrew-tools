@@ -1,22 +1,107 @@
-# Homebrew Tap for VoiceFormula Tools
+# vf-transcribe
 
-## Install
+Офлайн-транскрибация аудио с помощью VAD (Silero) + ASR (GigaAM). Работает локально, без отправки данных на сервер.
+
+## Установка
 
 ```bash
 brew tap r-ms/tools
 brew install vf-transcribe
 ```
 
-## Tools
+При первом запуске автоматически скачиваются модели (~200 МБ) в `~/.vf-transcribe/models/`.
 
-### vf-transcribe
-
-Offline speech-to-text transcription using VAD + GigaAM.
+## Использование
 
 ```bash
-vf-transcribe audio.opus -f srt
-vf-transcribe recording.wav -f text -o output.txt
-vf-transcribe interview.mp3 -f json
+# Транскрибация в текст с таймкодами
+vf-transcribe recording.opus
+
+# Субтитры SRT
+vf-transcribe recording.opus -f srt -o subtitles.srt
+
+# JSON с сегментами
+vf-transcribe interview.wav -f json -o result.json
+
+# Все опции
+vf-transcribe --help
 ```
 
-On first run, models (~200MB) are downloaded to `~/.vf-transcribe/models/`.
+## Форматы
+
+### Входные аудиоформаты
+
+Поддерживаются форматы, которые читает libsndfile:
+
+| Формат | Расширения |
+|--------|-----------|
+| WAV | `.wav` |
+| FLAC | `.flac` |
+| OGG Vorbis / Opus | `.ogg`, `.opus` |
+| AIFF | `.aiff`, `.aif` |
+| CAF | `.caf` |
+
+Любая частота дискретизации, моно или стерео — автоматически конвертируется в 16 кГц моно.
+
+### Другие форматы (MP4, MP3, AAC, WebM и т.д.)
+
+Форматы вроде `.mp4`, `.m4a`, `.mp3`, `.webm` не поддерживаются напрямую. Сконвертируйте их в WAV с помощью ffmpeg:
+
+```bash
+# Установить ffmpeg (если ещё не установлен)
+brew install ffmpeg
+
+# Конвертация в WAV
+ffmpeg -i video.mp4 -vn -acodec pcm_s16le audio.wav
+ffmpeg -i recording.m4a -acodec pcm_s16le audio.wav
+ffmpeg -i podcast.mp3 -acodec pcm_s16le audio.wav
+
+# Затем транскрибация
+vf-transcribe audio.wav -f srt
+```
+
+### Выходные форматы (`-f`)
+
+**text** (по умолчанию) — таймкоды + текст:
+```
+[00:01.230 - 00:04.560] Добрый день, расскажите что вас беспокоит.
+[00:05.100 - 00:12.340] У меня уже неделю болит голова, особенно по утрам.
+```
+
+**srt** — субтитры (стандарт SRT):
+```
+1
+00:00:01,230 --> 00:00:04,560
+Добрый день, расскажите что вас беспокоит.
+
+2
+00:00:05,100 --> 00:00:12,340
+У меня уже неделю болит голова, особенно по утрам.
+```
+
+**json** — структурированные данные:
+```json
+{
+  "segments": [
+    {"start": 1.23, "end": 4.56, "text": "Добрый день, расскажите что вас беспокоит."},
+    {"start": 5.1, "end": 12.34, "text": "У меня уже неделю болит голова, особенно по утрам."}
+  ]
+}
+```
+
+## Опции
+
+| Флаг | Описание | По умолчанию |
+|------|----------|-------------|
+| `-f`, `--format` | Формат вывода: `text`, `srt`, `json` | `text` |
+| `-o`, `--output` | Файл вывода (иначе stdout) | — |
+| `--vad-threshold` | Порог начала речи (0.0–1.0) | `0.5` |
+| `--model-dir` | Директория кеша моделей | `~/.vf-transcribe/models` |
+| `-v`, `--verbose` | Подробный лог в stderr | — |
+| `--version` | Версия | — |
+
+## Системные требования
+
+- macOS (Apple Silicon или Intel)
+- ~200 МБ свободного места для моделей
+- Интернет только при первом запуске (скачивание моделей)
