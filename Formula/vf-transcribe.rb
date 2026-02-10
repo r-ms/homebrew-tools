@@ -1,14 +1,13 @@
 class VfTranscribe < Formula
   desc "Offline speech-to-text transcription CLI (VAD + GigaAM)"
   homepage "https://voiceformula.ru"
-  version "0.1.0"
+  version "0.1.1"
 
   if Hardware::CPU.arm?
-    url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-arm64.tar.gz"
-    sha256 "c1a66293684352d2cdb015d668b87341833f46a8c98f5d49e0cd3d2536b5c61d"
+    url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.1/vf-transcribe-0.1.1-darwin-arm64.tar.gz"
+    sha256 "4c6392a6aaba374ab972ef15010cc233020c3719798242cf22a71b3de40ec599"
   else
-    url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-x86_64.tar.gz"
-    sha256 "PLACEHOLDER_X86_64_SHA256"
+    odie "vf-transcribe is currently only available for Apple Silicon (arm64)"
   end
 
   def install
