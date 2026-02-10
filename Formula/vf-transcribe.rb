@@ -5,7 +5,7 @@ class VfTranscribe < Formula
 
   if Hardware::CPU.arm?
     url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-arm64.tar.gz"
-    sha256 "0d9bf328a4476ea4b183b84ba007c152915811c0a35443e9a11a9d21bd25f535"
+    sha256 "64c5783bc01097705e64b101b78fbfd26da7def79ebb5061757361f1ade48eaa"
   else
     url "https://github.com/r-ms/homebrew-tools/releases/download/v0.1.0/vf-transcribe-0.1.0-darwin-x86_64.tar.gz"
     sha256 "PLACEHOLDER_X86_64_SHA256"
