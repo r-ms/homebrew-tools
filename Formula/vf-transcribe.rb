@@ -1,11 +1,11 @@
 class VfTranscribe < Formula
   desc "Offline speech-to-text transcription CLI (GigaAM RNNT)"
   homepage "https://voiceformula.ru"
-  version "0.2.0"
+  version "0.2.1"
 
   if Hardware::CPU.arm?
-    url "https://github.com/r-ms/homebrew-tools/releases/download/v0.2.0/vf-transcribe-0.2.0-darwin-arm64.tar.gz"
-    sha256 "013b501c664dc3a7002cef6c16eba2c88c210c4eb9e1fd775e19c2eaba8a31df"
+    url "https://github.com/r-ms/homebrew-tools/releases/download/v0.2.1/vf-transcribe-0.2.1-darwin-arm64.tar.gz"
+    sha256 "ba0742420481f72dcf8a1011059c5c4f37287d1a1a8e0f9a22044064e5c43b1a"
   else
     odie "vf-transcribe is currently only available for Apple Silicon (arm64)"
   end
