@@ -1,3 +1,22 @@
+# r-ms/tools
+
+| Formula | What it is |
+|---|---|
+| [diga](#diga) | Offline push-to-talk dictation for macOS, built for coding agents |
+| [vf-transcribe](#vf-transcribe) | Офлайн-транскрибация аудио (GigaAM) |
+
+## diga
+
+Hold the right ⌘, speak, release: the text is typed into the focused app. Russian, English,
+Portuguese and 23 more European languages, fully offline. Source and docs:
+<https://github.com/r-ms/diga>.
+
+```bash
+brew install r-ms/tools/diga
+diga models --download default   # once: Python packages and models (~3.5 GB)
+brew services start diga         # start now and at every login
+```
+
 # vf-transcribe
 
 Офлайн-транскрибация аудио с помощью VAD (Silero) + ASR (GigaAM). Работает локально, без отправки данных на сервер.
