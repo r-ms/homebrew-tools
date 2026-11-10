@@ -1,8 +1,8 @@
 class Diga < Formula
   desc "Offline push-to-talk dictation for macOS, built for coding agents"
   homepage "https://github.com/r-ms/diga"
-  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.5.tar.gz"
-  sha256 "8f8ef29a5e6d23baddb96c01da29de6729241d1f87314e0c5890edbdd4793668"
+  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.6.tar.gz"
+  sha256 "ea04ed24ae0aa9f2c8312deac4168d1c392d0b19c7c40bfac8f75c6e9b423e40"
   license "MIT"
 
   depends_on arch: :arm64
@@ -46,8 +46,9 @@ class Diga < Formula
         brew services start diga
       Hold the right ⌘ and speak.
 
-      macOS asks for the microphone; switch on Accessibility and Input Monitoring for diga's
-      Python in System Settings → Privacy & Security. `diga doctor` shows what is missing.
+      As a service diga shows up in System Settings → Privacy & Security as "Python": turn it
+      on in Input Monitoring and Accessibility (the menu-bar ⚠ opens the right page).
+      Log: `diga logs`. Check permissions: `diga doctor`.
       Uninstalling leaves ~/Library/Application Support/diga/python (its packages) behind.
     EOS
   end
