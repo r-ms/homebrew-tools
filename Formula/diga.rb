@@ -1,8 +1,8 @@
 class Diga < Formula
   desc "Offline push-to-talk dictation for macOS, built for coding agents"
   homepage "https://github.com/r-ms/diga"
-  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.8.tar.gz"
-  sha256 "c72660380f89a2516bdf3c6933ef7b851e44e2700a8b002d391c895f4f570d46"
+  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.9.tar.gz"
+  sha256 "e437b1150334ed765ce147ebb98f233b78f9f643c57d86e7574eb8aa1f178194"
   license "MIT"
 
   depends_on arch: :arm64
