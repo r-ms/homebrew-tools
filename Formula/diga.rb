@@ -1,8 +1,8 @@
 class Diga < Formula
   desc "Offline push-to-talk dictation for macOS, built for coding agents"
   homepage "https://github.com/r-ms/diga"
-  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.6.tar.gz"
-  sha256 "ea04ed24ae0aa9f2c8312deac4168d1c392d0b19c7c40bfac8f75c6e9b423e40"
+  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.7.tar.gz"
+  sha256 "c978cfb7ef0219869e4c8609a3c313e860476f9abf4e510405d53d9cec45ad2f"
   license "MIT"
 
   depends_on arch: :arm64
@@ -11,12 +11,12 @@ class Diga < Formula
   depends_on "uv"
 
   def install
-    # The keg holds a pure-Python wheel and a launcher. On first run the launcher builds the
-    # Python environment (PyTorch, MLX, …) in ~/Library/Application Support/diga/python: in a keg,
-    # Homebrew rewrites library IDs to absolute paths, which breaks PyTorch's extensions.
+    # The keg holds a pure-Python wheel, a launcher script and diga.app. On first run the script
+    # builds the Python environment (PyTorch, MLX, …) in ~/Library/Application Support/diga/python:
+    # in a keg, Homebrew rewrites library IDs to absolute paths, which breaks PyTorch.
     system "uv", "build", "--wheel", "--out-dir", libexec
     wheel = Dir[libexec/"diga-*.whl"].first
-    (bin/"diga").write <<~SH
+    (libexec/"diga-run").write <<~SH
       #!/bin/sh
       set -eu
       if [ "${1:-}" = "--version" ]; then echo "diga #{version}"; exit 0; fi
@@ -37,6 +37,22 @@ class Diga < Formula
       fi
       exec "$env/bin/diga" "$@"
     SH
+    chmod 0755, libexec/"diga-run"
+    bin.install_symlink libexec/"diga-run" => "diga"
+
+    # diga.app: macOS asks for the microphone and the keyboard in diga's name, not Python's.
+    # It must not change between versions (same signature = permissions survive upgrades).
+    app = prefix/"diga.app/Contents"
+    (app/"MacOS").mkpath
+    (app/"Resources").mkpath
+    system ENV.cc, "-O2", "-o", app/"MacOS/diga", "macos/launcher.c"
+    cp "macos/Info.plist", app/"Info.plist"
+    (app/"Resources/run").write <<~SH
+      #!/bin/sh
+      exec "#{opt_libexec}/diga-run" "$@"
+    SH
+    chmod 0755, app/"Resources/run"
+    system "codesign", "--force", "--sign", "-", "--identifier", "io.github.diga", prefix/"diga.app"
   end
 
   def caveats
@@ -46,15 +62,15 @@ class Diga < Formula
         brew services start diga
       Hold the right ⌘ and speak.
 
-      As a service diga shows up in System Settings → Privacy & Security as "Python": turn it
-      on in Input Monitoring and Accessibility (the menu-bar ⚠ opens the right page).
+      macOS asks for the microphone, Input Monitoring and Accessibility for "diga": allow
+      them (the menu-bar ⚠ opens the right page of System Settings).
       Log: `diga logs`. Check permissions: `diga doctor`.
       Uninstalling leaves ~/Library/Application Support/diga/python (its packages) behind.
     EOS
   end
 
   service do
-    run [opt_bin/"diga"]
+    run [opt_prefix/"diga.app/Contents/MacOS/diga"]
     keep_alive successful_exit: false
     process_type :interactive
     log_path var/"log/diga.log"
