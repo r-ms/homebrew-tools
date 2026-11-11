@@ -1,8 +1,8 @@
 class Diga < Formula
   desc "Offline push-to-talk dictation for macOS, built for coding agents"
   homepage "https://github.com/r-ms/diga"
-  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.9.tar.gz"
-  sha256 "e437b1150334ed765ce147ebb98f233b78f9f643c57d86e7574eb8aa1f178194"
+  url "https://github.com/r-ms/diga/archive/refs/tags/v0.1.10.tar.gz"
+  sha256 "abdef7b11924a41af47ecf78f708e1384d3c65a5739e978752fd9ed2a4002a58"
   license "MIT"
 
   depends_on arch: :arm64
@@ -45,7 +45,8 @@ class Diga < Formula
     app = prefix/"diga.app/Contents"
     (app/"MacOS").mkpath
     (app/"Resources").mkpath
-    system ENV.cc, "-O2", "-o", app/"MacOS/diga", "macos/launcher.c"
+    system ENV.cc, "-O2", "-framework", "ApplicationServices", "-o", app/"MacOS/diga",
+           "macos/launcher.c"
     cp "macos/Info.plist", app/"Info.plist"
     (app/"Resources/run").write <<~SH
       #!/bin/sh
